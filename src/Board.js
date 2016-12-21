@@ -79,12 +79,26 @@
     //
     // test if a specific row on this board contains a conflict
     hasRowConflictAt: function(rowIndex) {
-      return false; // fixme
+      // console.log('this:', this);
+      // console.log('rowIndex: ', rowIndex);
+      // console.log('attributes: ', this.attributes);
+      var result = this.get(rowIndex).reduce(function(pre,cur){
+        return pre+cur;
+      });
+      if (result > 1)  return true;
+
+      return false;
     },
 
     // test if any rows on this board contain conflicts
     hasAnyRowConflicts: function() {
-      return false; // fixme
+    for (var i = 0; i < this.get('n'); i++){
+      var result = this.get(i).reduce(function(pre,cur){
+        return pre+cur;
+      });
+      if (result > 1)  return true;
+    }
+      return false;
     },
 
 
@@ -94,12 +108,24 @@
     //
     // test if a specific column on this board contains a conflict
     hasColConflictAt: function(colIndex) {
-      return false; // fixme
+      var sum = 0;
+      for (var i = 0; i < this.get('n'); i++) {
+        sum += this.get(i)[colIndex];
+      }
+      return sum > 1 ? true : false;
     },
 
     // test if any columns on this board contain conflicts
     hasAnyColConflicts: function() {
-      return false; // fixme
+      var sum = 0, n = this.get('n');
+      for (var column = 0; column < n; column++) {
+        sum = 0;
+        for (var row = 0; row < n; row++) {
+          sum += this.get(row)[column];
+        }
+        if (sum > 1) return true;
+      }
+      return false;
     },
 
 
@@ -109,11 +135,100 @@
     //
     // test if a specific major diagonal on this board contains a conflict
     hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) {
-      return false; // fixme
+      // console.log('majorDiagonalColumnIndexAtFirstRow', majorDiagonalColumnIndexAtFirstRow);
+      // console.log('Attributes', this);
+      var n = this.get('n');
+      var mdc = majorDiagonalColumnIndexAtFirstRow;
+      // console.log('COLUMN INDEX AT FIRST ROW', mdc);
+
+      // for (var i = 0 ; i < n; i++) { //first go through all the rows
+
+      // }
+
+      var row = 0; //start at the irst row
+      var column = mdc; // start at the diagonal column
+
+      if (mdc > 0) {
+      var sum = 0;
+      while((row < n) && (column < n)){
+          sum+=this.get(row)[column]; //sum things diagonally
+          row++;
+          column++;
+        }
+      } else {
+        while (column < 0) { //incrementing the position until we are on the board with column index >0
+          column++;
+          row++;
+        }
+
+        var sum = 0;
+
+        while((row < n) && (column < n)){
+          sum+=this.get(row)[column]; //sum things diagonally
+          row++;
+          column++;
+        }
+      }
+
+      return sum > 1 ? true : false; //check if negative 1
+
+      //return false;
+
+
+
+
+      /*
+
+      Left to Right
+
+      return colIndex - rowIndex;
+
+
+      col
+
+      [1, 0, 0, 0] row1 - location of queen is 0
+      [0, 0, 0, 0] row2
+      [0, 0, 1, 0] row3 - location of queen is 2
+      [0, 0, 0, 0] row4
+
+      indexOf(1) === 1
+      indexOf(2) === -1
+      indexOf(3) === 3
+
+      if (indexOf(1) - indexOf(3) equals difference between row3 and row1)
+
+      [0, 0, 0, 0]
+      [1, 0, 0, 0]
+      [0, 0, 0, 0]
+      [0, 0, 1, 0]
+
+      if
+
+       */
     },
 
     // test if any major diagonals on this board contain conflicts
     hasAnyMajorDiagonalConflicts: function() {
+      //test the big top right triangle
+      var row, sum, innerCol;
+      var n = this.get('n');
+      for (var column = -(n-2); column < n; column++){ //check through the first row
+        row = 0;
+        sum = 0;
+        innerCol = column;
+        while(innerCol < 0){
+          innerCol++;
+          row++;
+        }
+        while (row < n && innerCol < n){
+          sum += this.get(row)[innerCol];
+          // console.log('[row,innerCol]: ',row,", ",innerCol);
+          // console.log('sum: ',sum);
+          row++;
+          innerCol++;
+        }
+        if (sum>1) return true;
+      }
       return false; // fixme
     },
 
@@ -124,12 +239,71 @@
     //
     // test if a specific minor diagonal on this board contains a conflict
     hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow) {
-      return false; // fixme
+       // console.log('majorDiagonalColumnIndexAtFirstRow', majorDiagonalColumnIndexAtFirstRow);
+      // console.log('Attributes', this);
+      var n = this.get('n');
+      var mdc = minorDiagonalColumnIndexAtFirstRow; //colInd-rowInd
+      // console.log('COLUMN INDEX AT FIRST ROW', mdc);
+
+      // for (var i = 0 ; i < n; i++) { //first go through all the rows
+
+      // }
+
+      var row = 0; //start at the irst row
+      var column = mdc; // start at the diagonal column
+
+      if (mdc < n) {
+      var sum = 0;
+      while((row < n) && (column >= 0)){
+          sum+=this.get(row)[column]; //sum things diagonally
+          row++;
+          column--;
+        }
+      } else {
+        while (column >= n) { //incrementing the position until we are on the board with column index >0
+          column--;
+          row++;
+        }
+
+        var sum = 0;
+
+        while((row < n) && (column >= 0)){
+          sum+=this.get(row)[column]; //sum things diagonally
+          row++;
+          column--;
+        }
+      }
+
+      return sum > 1 ? true : false; //check if negative 1
+
+      //return false;
+
     },
 
     // test if any minor diagonals on this board contain conflicts
     hasAnyMinorDiagonalConflicts: function() {
+      //test the big top right triangle
+      var row, sum, innerCol;
+      var n = this.get('n');
+      for (var column = (n-1)*2; column >= 0; column--) { //check through the first row
+        row = 0;
+        sum = 0;
+        innerCol = column;
+        while(innerCol >= n) {
+          innerCol--;
+          row++;
+        }
+        while (row < n && innerCol >= 0){
+          sum += this.get(row)[innerCol];
+          // console.log('[row,innerCol]: ',row,", ",innerCol);
+          // console.log('sum: ',sum);
+          row++;
+          innerCol--;
+        }
+        if (sum>1) return true;
+      }
       return false; // fixme
+
     }
 
     /*--------------------  End of Helper Functions  ---------------------*/
