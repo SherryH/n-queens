@@ -85,19 +85,19 @@
       var result = this.get(rowIndex).reduce(function(pre,cur){
         return pre+cur;
       });
-      if (result > 1)  return true;
+      if (result > 1) { return true;}
 
       return false;
     },
 
     // test if any rows on this board contain conflicts
     hasAnyRowConflicts: function() {
-    for (var i = 0; i < this.get('n'); i++){
-      var result = this.get(i).reduce(function(pre,cur){
-        return pre+cur;
-      });
-      if (result > 1)  return true;
-    }
+      for (var i = 0; i < this.get('n'); i++){
+        var result = this.get(i).reduce(function(pre,cur){
+          return pre+cur;
+        });
+        if (result > 1) { return true;}
+      }
       return false;
     },
 
@@ -123,7 +123,7 @@
         for (var row = 0; row < n; row++) {
           sum += this.get(row)[column];
         }
-        if (sum > 1) return true;
+        if (sum > 1) {return true;}
       }
       return false;
     },
@@ -149,8 +149,8 @@
       var column = mdc; // start at the diagonal column
 
       if (mdc > 0) {
-      var sum = 0;
-      while((row < n) && (column < n)){
+        var sum = 0;
+        while((row < n) && (column < n)){
           sum+=this.get(row)[column]; //sum things diagonally
           row++;
           column++;
@@ -227,7 +227,7 @@
           row++;
           innerCol++;
         }
-        if (sum>1) return true;
+        if (sum>1) {return true;}
       }
       return false; // fixme
     },
@@ -253,8 +253,8 @@
       var column = mdc; // start at the diagonal column
 
       if (mdc < n) {
-      var sum = 0;
-      while((row < n) && (column >= 0)){
+        var sum = 0;
+        while((row < n) && (column >= 0)){
           sum+=this.get(row)[column]; //sum things diagonally
           row++;
           column--;
@@ -300,7 +300,7 @@
           row++;
           innerCol--;
         }
-        if (sum>1) return true;
+        if (sum>1) {return true;}
       }
       return false; // fixme
 
